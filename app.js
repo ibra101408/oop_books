@@ -1,0 +1,46 @@
+const ui = new UI()
+const ls = new LS()
+
+// user input form
+const form = document.querySelector('#book-form')
+form.addEventListener('submit', addBook)
+
+document.addEventListener('DOMContentLoaded', getBooks)
+
+// books table
+const bookList = document.querySelector('#book-list')
+bookList.addEventListener('click', delBook)
+
+function delBook(event){
+    if(event.target.textContent === 'X'){
+        const book = ui.getBook(event.target)
+        if(ui.delBook(event.target) === true){
+            ls.delBook(book)
+        }
+    }
+}
+
+function getBooks(){
+    // get data from LS
+    const books = ls.getData('books')
+    books.forEach(function (booksFromLS){
+        ui.addBook(booksFromLS)
+    })
+}
+
+function addBook(event){
+    const title = ui.title.value
+    const author = ui.author.value
+    const isbn = ui.isbn.value
+    // create book object with user data
+    const book = new Book(title, author, isbn)
+    console.log(book)
+    ui.addBook(book)
+    // save book to LS
+    ls.addBook(book)
+    // clear form input
+    ui.title.value = ''
+    ui.author.value = ''
+    ui.isbn.value = ''
+    event.preventDefault()
+}
